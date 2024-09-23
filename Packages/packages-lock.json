@@ -83,17 +83,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.probuilder": {
-      "version": "5.1.1",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.modules.imgui": "1.0.0",
-        "com.unity.modules.physics": "1.0.0",
-        "com.unity.settings-manager": "1.0.3"
-      },
-      "url": "https://packages.unity.com"
-    },
     "com.unity.render-pipelines.core": {
       "version": "14.0.8",
       "depth": 1,
@@ -125,7 +114,7 @@
     },
     "com.unity.settings-manager": {
       "version": "2.0.1",
-      "depth": 2,
+      "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -200,21 +189,18 @@
       "url": "https://package.openupm.com"
     },
     "jillejr.newtonsoft.json-for-unity": {
-      "version": "13.0.102",
+      "version": "https://github.com/jilleJr/Newtonsoft.Json-for-Unity.git#upm",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f2c6cb09817832dccd0600f291053d8d55298ee9"
+    },
+    "jillejr.newtonsoft.json-for-unity.converters": {
+      "version": "1.6.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://npm.cloudsmith.io/jillejr/newtonsoft-json-for-unity"
-    },
-    "nl.elmarjansen.geojsoncitybuilder": {
-      "version": "0.4.2",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.probuilder": "4.5.2",
-        "com.virgis.geojson.net": "1.2.17"
-      },
-      "url": "https://package.openupm.com"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

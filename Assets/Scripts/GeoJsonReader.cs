@@ -4,59 +4,123 @@ using Newtonsoft.Json.Linq;
 
 public class GeoJsonReader : MonoBehaviour
 {
-    [SerializeField] private TextAsset geoJsonFile; // Voeg het GeoJSON-bestand toe in de Unity-editor
-    public Material lineMaterial; // Voeg een materiaal toe voor de lijnen
+    [SerializeField] private TextAsset geoJsonFile; // Add the GeoJSON file in the Unity Editor
+
+    // Prefabs for each model type
+    public GameObject pipePrefab;
+    public GameObject weirPrefab;
+    public GameObject pumpPrefab;
+    public GameObject manholePrefab;
+    public GameObject leveePrefab;
+    public GameObject culvertPrefab;  
+    public GameObject nodePrefab;      
+    public GameObject channelPrefab;   
+    public GameObject orificePrefab;   
+
+    // Dictionary to map model types to prefabs
+    private Dictionary<string, GameObject> modelTypePrefabs;
 
     void Start()
     {
+        // Initialize the dictionary that maps model types to prefabs
+        modelTypePrefabs = new Dictionary<string, GameObject>
+        {
+            { "Pipes", pipePrefab },
+            { "Weirs", weirPrefab },
+            { "Pumps", pumpPrefab },
+            { "Manholes", manholePrefab },
+            { "Levees", leveePrefab },
+            { "Culverts", culvertPrefab },  
+            { "Nodes", nodePrefab },          
+            { "Channels", channelPrefab },     
+            { "Orifices", orificePrefab }      
+        };
+
         // Parse the GeoJSON data
         JObject geoJson = JObject.Parse(geoJsonFile.text);
 
         // Loop through the features
         foreach (var feature in geoJson["features"])
         {
-            // Get the coordinates array
-            var coordinates = feature["geometry"]["coordinates"];
+            // Get the geometry type
+            string geometryType = feature["geometry"]["type"].ToString();
 
-            List<Vector3> linePoints = new List<Vector3>();
+            // Get the model type from the properties
+            string modelType = feature["properties"]["model_type"].ToString();
 
-            // Convert GeoJSON coordinates to Unity world coordinates
-            foreach (var coordinate in coordinates)
+            // Handle different geometry types
+            if (geometryType == "LineString")
             {
-                float longitude = (float)coordinate[0];
-                float latitude = (float)coordinate[1];
+                // Get the coordinates array for LineString
+                var coordinates = feature["geometry"]["coordinates"];
+                List<Vector3> positions = new List<Vector3>();
 
-                // Convert geographical coordinates to Unity world position
-                Vector3 worldPos = ConvertGeoCoordsToUnity(longitude, latitude);
-                linePoints.Add(worldPos);
+                // Convert each coordinate to Unity position
+                foreach (var coordinate in coordinates)
+                {
+                    float longitude = (float)coordinate[0];
+                    float latitude = (float)coordinate[1];
+                    Vector3 worldPos = ConvertGeoCoordsToUnity(longitude, latitude);
+                    positions.Add(worldPos);
+                }
+
+                // Instantiate a line segment for Pipes, Culverts, Channels, Orifices, or other line-based models
+                for (int i = 0; i < positions.Count - 1; i++)
+                {
+                    CreateLineSegment(positions[i], positions[i + 1], modelType);
+                }
             }
-
-            // Create a new GameObject with a LineRenderer for each feature
-            CreateLine(linePoints.ToArray());
+            else if (geometryType == "Point")
+            {
+                // Get the coordinates for Point
+                var coordinates = feature["geometry"]["coordinates"];
+                float longitude = (float)coordinates[0];
+                float latitude = (float)coordinates[1];
+                Vector3 worldPos = ConvertGeoCoordsToUnity(longitude, latitude);
+                
+                // Instantiate the icon at the point
+                CreateIcon(worldPos, modelType);
+            }
+            else
+            {
+                Debug.LogWarning("Unhandled geometry type: " + geometryType);
+            }
         }
     }
 
+    // Method to convert geographical coordinates to Unity world coordinates
     private Vector3 ConvertGeoCoordsToUnity(float longitude, float latitude)
     {
-        // Dit is een vereenvoudigde conversie. Voor preciezere conversies kun je een
-        // bibliotheek voor conversie tussen geografische coördinaten en kaartprojecties gebruiken.
-        float x = longitude * 1000f; // Schalen of aanpassen voor jouw project
-        float z = latitude * 1000f;  // Schalen of aanpassen voor jouw project
-        float y = 0f; // Dit is vlak op de grond. Voeg eventueel hoogte toe.
+        // A simplified conversion. Adjust scaling for your project.
+        float x = longitude * 1000f; // Scale factor
+        float z = latitude * 1000f;   // Scale factor
+        float y = 0f; // This is flat on the ground. Add height if necessary.
 
         return new Vector3(x, y, z);
     }
 
-    private void CreateLine(Vector3[] points)
+    // Method to create an icon based on the model type
+    private void CreateIcon(Vector3 position, string modelType)
     {
-        GameObject lineObj = new GameObject("GeoLine");
-        lineObj.transform.parent = GameObject.Find("LineContainer").transform; // Maak het kind van LineContainer
-        LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
-        lineRenderer.material = lineMaterial;
-        lineRenderer.positionCount = points.Length;
-        lineRenderer.SetPositions(points);
-        lineRenderer.startWidth = 0.1f;
-        lineRenderer.endWidth = 0.1f;
+        // Check if the model type exists in the dictionary
+        if (modelTypePrefabs.ContainsKey(modelType))
+        {
+            // Instantiate the corresponding prefab at the given position
+            Instantiate(modelTypePrefabs[modelType], position, Quaternion.identity);
+        }
+        else
+        {
+            Debug.LogWarning("Model type not recognized: " + modelType);
+        }
     }
 
+    // Method to create a line segment between two points for LineString geometries
+    private void CreateLineSegment(Vector3 start, Vector3 end, string modelType)
+    {
+        // Instantiate a prefab for the line segment. You may want to create a specific prefab for lines.
+        // For now, instantiate the same model type prefab at the start position (customize this as needed).
+        CreateIcon(start, modelType);
+        // Optionally, instantiate another prefab at the end position
+        CreateIcon(end, modelType);
+    }
 }
