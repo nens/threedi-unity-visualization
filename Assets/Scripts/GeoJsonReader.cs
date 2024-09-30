@@ -22,8 +22,12 @@ public class GeoJsonReader : MonoBehaviour
     // Dictionary for line materials
     private Dictionary<string, Material> lineMaterials;
 
+    private CameraFollow cameraFollow; // Reference to the CameraFollow script
+
     void Start()
     {
+        cameraFollow = Camera.main.GetComponent<CameraFollow>(); // Get the CameraFollow component
+
         // Initialize the dictionary for 3D objects (only for Pumps and Weirs)
         modelTypePrefabs = new Dictionary<string, GameObject>
         {
@@ -45,6 +49,8 @@ public class GeoJsonReader : MonoBehaviour
 
         // Parse the GeoJSON data
         JObject geoJson = JObject.Parse(geoJsonFile.text);
+
+        Transform firstObjectTransform = null; // Track the first instantiated object
 
         // Loop through the features
         foreach (var feature in geoJson["features"])
@@ -76,7 +82,7 @@ public class GeoJsonReader : MonoBehaviour
                 {
                     // Instantiate the weir model at the midpoint of the coordinates
                     Vector3 midpoint = (positions[0] + positions[positions.Count - 1]) / 2;
-                    Create3DObject(midpoint, modelType);
+                    firstObjectTransform = Create3DObject(midpoint, modelType);
                 }
                 else
                 {
@@ -95,13 +101,19 @@ public class GeoJsonReader : MonoBehaviour
                 // Only instantiate 3D objects for Pumps if type is Point
                 if (modelType == "Pumps")
                 {
-                    Create3DObject(worldPos, modelType);
+                    firstObjectTransform = Create3DObject(worldPos, modelType);
                 }
             }
             else
             {
                 Debug.LogWarning("Unhandled geometry type: " + geometryType);
             }
+        }
+
+        // Set the camera target to the first instantiated object
+        if (firstObjectTransform != null && cameraFollow != null)
+        {
+            cameraFollow.target = firstObjectTransform; // Set the camera target to the first object
         }
     }
 
@@ -117,7 +129,7 @@ public class GeoJsonReader : MonoBehaviour
     }
 
     // Method to create a 3D object (Pump or Weir)
-    private void Create3DObject(Vector3 position, string modelType)
+    private Transform Create3DObject(Vector3 position, string modelType)
     {
         // Check if the model type exists in the dictionary
         if (modelTypePrefabs.ContainsKey(modelType))
@@ -128,7 +140,8 @@ public class GeoJsonReader : MonoBehaviour
             if (prefab != null)
             {
                 // Instantiate the corresponding prefab at the given position
-                Instantiate(prefab, position, Quaternion.identity);
+                GameObject instance = Instantiate(prefab, position, Quaternion.identity);
+                return instance.transform; // Return the transform of the instantiated object
             }
             else
             {
@@ -139,6 +152,8 @@ public class GeoJsonReader : MonoBehaviour
         {
             Debug.LogWarning("Model type not recognized: " + modelType);
         }
+
+        return null; // Return null if instantiation fails
     }
 
     // Method to create a line between points for LineString geometries
