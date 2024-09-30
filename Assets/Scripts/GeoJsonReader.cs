@@ -117,10 +117,7 @@ public class GeoJsonReader : MonoBehaviour
     // Method to create a line segment between two points for LineString geometries
     private void CreateLineSegment(Vector3 start, Vector3 end, string modelType)
     {
-        // Instantiate a prefab for the line segment. You may want to create a specific prefab for lines.
-        // For now, instantiate the same model type prefab at the start position (customize this as needed).
+        // Instantiate a prefab only at the start position
         CreateIcon(start, modelType);
-        // Optionally, instantiate another prefab at the end position
-        CreateIcon(end, modelType);
     }
 }
