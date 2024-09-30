@@ -6,34 +6,41 @@ public class GeoJsonReader : MonoBehaviour
 {
     [SerializeField] private TextAsset geoJsonFile; // Add the GeoJSON file in the Unity Editor
 
-    // Prefabs for each model type
-    public GameObject pipePrefab;
     public GameObject weirPrefab;
     public GameObject pumpPrefab;
-    public GameObject manholePrefab;
-    public GameObject leveePrefab;
-    public GameObject culvertPrefab;  
-    public GameObject nodePrefab;      
-    public GameObject channelPrefab;   
-    public GameObject orificePrefab;   
+    public Material pipeMaterial;
+    public Material manholeMaterial;
+    public Material leveeMaterial;
+    public Material culvertMaterial;
+    public Material nodeMaterial;
+    public Material channelMaterial;
+    public Material orificeMaterial;
 
-    // Dictionary to map model types to prefabs
+    // Dictionary for 3D model types (for pumps and weirs)
     private Dictionary<string, GameObject> modelTypePrefabs;
+
+    // Dictionary for line materials
+    private Dictionary<string, Material> lineMaterials;
 
     void Start()
     {
-        // Initialize the dictionary that maps model types to prefabs
+        // Initialize the dictionary for 3D objects (only for Pumps and Weirs)
         modelTypePrefabs = new Dictionary<string, GameObject>
         {
-            { "Pipes", pipePrefab },
             { "Weirs", weirPrefab },
-            { "Pumps", pumpPrefab },
-            { "Manholes", manholePrefab },
-            { "Levees", leveePrefab },
-            { "Culverts", culvertPrefab },  
-            { "Nodes", nodePrefab },          
-            { "Channels", channelPrefab },     
-            { "Orifices", orificePrefab }      
+            { "Pumps", pumpPrefab }
+        };
+
+        // Initialize the dictionary for line materials
+        lineMaterials = new Dictionary<string, Material>
+        {
+            { "Pipes", pipeMaterial },
+            { "Manholes", manholeMaterial },
+            { "Levees", leveeMaterial },
+            { "Culverts", culvertMaterial },
+            { "Nodes", nodeMaterial },
+            { "Channels", channelMaterial },
+            { "Orifices", orificeMaterial }
         };
 
         // Parse the GeoJSON data
@@ -64,10 +71,17 @@ public class GeoJsonReader : MonoBehaviour
                     positions.Add(worldPos);
                 }
 
-                // Instantiate a line segment for Pipes, Culverts, Channels, Orifices, or other line-based models
-                for (int i = 0; i < positions.Count - 1; i++)
+                // Handle weirs as 3D objects instead of lines
+                if (modelType == "Weirs")
                 {
-                    CreateLineSegment(positions[i], positions[i + 1], modelType);
+                    // Instantiate the weir model at the midpoint of the coordinates
+                    Vector3 midpoint = (positions[0] + positions[positions.Count - 1]) / 2;
+                    Create3DObject(midpoint, modelType);
+                }
+                else
+                {
+                    // Create a line for all non-3D model types
+                    CreateLine(positions.ToArray(), modelType);
                 }
             }
             else if (geometryType == "Point")
@@ -77,9 +91,12 @@ public class GeoJsonReader : MonoBehaviour
                 float longitude = (float)coordinates[0];
                 float latitude = (float)coordinates[1];
                 Vector3 worldPos = ConvertGeoCoordsToUnity(longitude, latitude);
-                
-                // Instantiate the icon at the point
-                CreateIcon(worldPos, modelType);
+
+                // Only instantiate 3D objects for Pumps if type is Point
+                if (modelType == "Pumps")
+                {
+                    Create3DObject(worldPos, modelType);
+                }
             }
             else
             {
@@ -99,14 +116,24 @@ public class GeoJsonReader : MonoBehaviour
         return new Vector3(x, y, z);
     }
 
-    // Method to create an icon based on the model type
-    private void CreateIcon(Vector3 position, string modelType)
+    // Method to create a 3D object (Pump or Weir)
+    private void Create3DObject(Vector3 position, string modelType)
     {
         // Check if the model type exists in the dictionary
         if (modelTypePrefabs.ContainsKey(modelType))
         {
-            // Instantiate the corresponding prefab at the given position
-            Instantiate(modelTypePrefabs[modelType], position, Quaternion.identity);
+            GameObject prefab = modelTypePrefabs[modelType];
+
+            // Check if the prefab is assigned
+            if (prefab != null)
+            {
+                // Instantiate the corresponding prefab at the given position
+                Instantiate(prefab, position, Quaternion.identity);
+            }
+            else
+            {
+                Debug.LogError($"Prefab for {modelType} is not assigned in the Inspector!");
+            }
         }
         else
         {
@@ -114,10 +141,30 @@ public class GeoJsonReader : MonoBehaviour
         }
     }
 
-    // Method to create a line segment between two points for LineString geometries
-    private void CreateLineSegment(Vector3 start, Vector3 end, string modelType)
+    // Method to create a line between points for LineString geometries
+    private void CreateLine(Vector3[] positions, string modelType)
     {
-        // Instantiate a prefab only at the start position
-        CreateIcon(start, modelType);
+        // Only create lines for non-3D objects
+        if (lineMaterials.ContainsKey(modelType))
+        {
+            GameObject lineObj = new GameObject(modelType + "_Line");
+            LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
+
+            // Assign the material for the line based on model type
+            lineRenderer.material = lineMaterials[modelType];
+
+            // Set the positions for the line renderer
+            lineRenderer.positionCount = positions.Length;
+            lineRenderer.SetPositions(positions);
+
+            // Adjust the line width if needed
+            lineRenderer.startWidth = 0.1f;
+            lineRenderer.endWidth = 0.1f;
+        }
+        else
+        {
+            // Log a warning for model types that don't have materials assigned
+            Debug.LogWarning("No line material found for model type: " + modelType);
+        }
     }
 }
