@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03ffdfbd34fba564788f28d786a5b5b5, type: 3}
+  m_Name: GISTerrainLoaderVectorParameters
+  m_EditorClassIdentifier: 
+  Attributes_Points:
+  - place
+  - tourism
+  - GPX_Point
+  - KML_Point
+  - GEOJSON_Point
+  Attributes_Grass:
+  - leisure
+  - landuse
+  - natural
+  - grass
+  Attributes_Trees:
+  - leisure
+  - landuse
+  - natural
+  - Trees
+  Attributes_Buildings:
+  - amenity
+  - building
+  - tourism
+  - Shop
+  - Shop1
+  - Shop2
+  Attributes_Roads:
+  - highway
+  - MyShpRoad
+  - Road
+  - GPX_Line
+  - KML_Line
+  - TYPE
+  Attributes_Water:
+  - place
+  - waterway
+  Attributes_LandParcel:
+  - place
+  - landuse
+  ID_Tag: id
+  Layer_Tag: LAYER
+  Name_Tag: name
+  Null_Tag: None
+  building_Levels_Tga: levels
+  building_MinLevel_Tga: min_level
+  building_Height_Tga: height
+  building_MinHeight_Tga: min_height
+  building_MaxHeight_Tga: max_height
+  DefaultHeightScale: 5
+  AddVectorDataBaseToGameObjects: 1
+  LoadDataOutOfContainerBounds: 0
+  AddRandom_ID_Vector_GPX: 1
+  GPX_GeoPoint_Attribute: GPX_Point
+  GPX_GeoPoint_Value: GPX_GeoPoint_Model
+  GPX_GeoLine_Attribute: GPX_Line
+  GPX_GeoLine_Value: GPX_GeoLine_Model
+  AddRandom_ID_Vector_KML: 1
+  KML_GeoPoint_Attribute: KML_Point
+  KML_GeoPoint_Value: KML_GeoPoint_Model
+  KML_GeoLine_Attribute: KML_Line
+  KML_GeoLine_Value: KML_GeoLine_Model
+  GEOJSON_GeoPoint_Attribute: GEOJSON_Point
+  GEOJSON_GeoPoint_Value: GEOJSON_GeoPoint_Model
+  GEOJSON_GeoLine_Attribute: GEOJSON_Line
+  GEOJSON_GeoLine_Value: GEOJSON_GeoLine_Model
+  GEOJSON_GeoPolygon_Attribute: GEOJSON_Polygon
+  GEOJSON_GeoPolygon_Value: GEOJSON_GeoPolygon_Model

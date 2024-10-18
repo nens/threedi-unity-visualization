@@ -1,0 +1,1 @@
+Fro Android, ISO and WebGL all Vector Data must be in "Terrain_VectorData" folder.

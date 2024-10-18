@@ -1,0 +1,17 @@
+{
+    "name": "GISTerrainLoaderRuntime",
+    "rootNamespace": "",
+    "references": [
+        "GUID:874efd6ed29cc0b4a81ad5c39d1a318f",
+        "GUID:5b28aff0f52824d45883fcd0ccf71494"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

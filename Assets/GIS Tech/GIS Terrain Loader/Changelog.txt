@@ -1,0 +1,60 @@
+VERSION 1.5 
+Released Date :
+
+01 : Added :   Ability to Load OSM Data even though the Terrain EPSG is not equals to WGS84 EPSG= 4326  
+02 : Added :   Ability to Generate terrain Background  for more realistic Horizon view
+03 : Added :   Ability to display and Set Terrain Layer name instead of Layer number 
+04 : Added :   Ability to Adapte 2D Complexed Polygons (LandParcel) to the terrain elevation.
+05 : Added :   Ability to Configure the complexity level + Y offset of Polygons (LandParcel).
+06 : Added :   New Demo scene 'SetTerrainPosition', Shows how to snap a small terrain position to the main terrain.
+07 : Added :   New Demo scene 'Airplane With Terrain Background' Shows how to add terrain background to the terrai generated in Play/edit mode.
+08 : Added :   New Demo scene 'Export To VectorData' Shows how to export Unity Gameobjects to VectorData (ShapeFile).
+09 : Fixed :   Editor Generator Errors when cancel generation
+10 : Fixed :   Rotated Textures (Raster Data) at runtime with extension of 'Tif'.
+11 : Fixed :   Enable Vector Generator for water Landscape in play mode.
+12 : Updated:  Main Demo Scene
+
+VERSION 1.4 
+Released Date :
+
+01 : Updated : ShapeFileLoader now Supports PolyZ and Poly2D in the same file 
+02 : Updated : Runtime Terrain Generator 
+03 : Updated : Ability to load Projected DEMs for Android platform.
+04 : Added :   Ability to generate 2D Complexed Polygons as LandParcel.
+05 : Fixed :   Producing terrains more than (9x9)
+06 : Fixed :   'GISTerrainLoaderTextureGenerator' does not contain a definition for 'GetFullTextureFolders' on Build mode
+07 : Fixed :   Issue with null tile count
+08 : Fixed :   Loading DEM DotSpatial for android platform (Online Doc Updated)
+
+
+VERSION 1.3 
+Released Date : 05/05/2024
+
+01 : GeoJson Loader Improved
+02 : Fixed producing terrains more than count more than (9x9)
+03 : Fixed 'GISTerrainLoaderTextureGenerator' does not contain a definition for 'GetFullTextureFolders' on Build mode
+
+
+VERSION 1.2  
+Released Date : 28/01/2024
+
+01 : Fix Terrain Deformation Option is improved.
+02 : Fixed a some errors for runtime generator 
+03 : Fixed a small offset for Grass Generator
+04 : Fixed issue with PointZ elevation for ShapeFile
+05 : Added ability to Select/Update terrain texture layer 
+06 : Added ability to Blend Terrain Layers
+07 : Added New Demo Scene '16_SelectTextureLayer' + '17_BlendMultiTextures'  + '18_RuntimeProjectionSystem'
+08 : Online Documentaion updated 
+09 : Added Link to 'Road Creator Pro' package in Readme.txt
+
+VERSION 1.1  
+Released Date : 10/01/2024
+
+01 : Fixed Error While Loading GTL Editor Prefs
+02 : Fixed Tiff Set to manual Dimension 
+03 : Fixed Error for Tiff with undefined projection EPSG = 32767
+04 : For Demo Purpose  : Added a new button in the 'Main Demo Scene' to add scenes into 'Scenes in Build' list 
+05 : For Demo Purpose  : Added Link to StreamingAssets Folder data + Runtime File Browser into Readme.txt file
+
+
