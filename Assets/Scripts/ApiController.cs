@@ -21,11 +21,11 @@ public class ExtentTwoD
 
 public class ApiController : MonoBehaviour
 {
-    private string apiKey = "[YOUR_API]";
+    private string apiKey = "dYvPfARb.ZGTNq1n3sgpUNXOFklqw74RvzNNMOeRd";
     private const string baseUrl = "https://api.3di.live/v3/threedimodels/"; // Base URL without the model ID
 
     public MapController mapController; // Reference to your MapController
-    public TMP_InputField codeInputField; // Reference to the TMP input field for user code
+    public TMP_Dropdown codeDropdown; // Reference to the TMP input field for user code
     public Button submitButton; // Reference to the button for submission
 
     void Start()
@@ -43,13 +43,14 @@ public class ApiController : MonoBehaviour
 
     void OnSubmitButtonClicked()
     {
-        // Get the user input code
-        string userCode = codeInputField.text.Trim(); // Remove any leading/trailing whitespace
+        // Get the selected value from the dropdown
+        int selectedIndex = codeDropdown.value;
+        string userCode = codeDropdown.options[selectedIndex].text; // Get the selected option's text
 
         // Ensure userCode is not empty
         if (string.IsNullOrEmpty(userCode))
         {
-            Debug.LogWarning("Input code is empty!");
+            Debug.LogWarning("No code selected from the dropdown!");
             return;
         }
 
@@ -58,9 +59,6 @@ public class ApiController : MonoBehaviour
 
         // Start the coroutine to fetch data
         StartCoroutine(GetRequest(url));
-
-        // Clear the input field after submission
-        codeInputField.text = "";
     }
 
     IEnumerator GetRequest(string url)
