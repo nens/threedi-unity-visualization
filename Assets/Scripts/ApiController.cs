@@ -21,7 +21,7 @@ public class ExtentTwoD
 
 public class ApiController : MonoBehaviour
 {
-    private string apiKey = "dYvPfARb.ZGTNq1n3sgpUNXOFklqw74RvzNNMOeRd";
+    private string apiKey = "[API_KEY]";
     private const string baseUrl = "https://api.3di.live/v3/threedimodels/"; // Base URL without the model ID
 
     public MapController mapController; // Reference to your MapController
